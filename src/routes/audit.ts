@@ -54,8 +54,18 @@ audit.get("/:event_id/verify", (c) => {
     return c.json({ error: "invalid event_id" }, 400);
   }
 
-  const result = verify_record(event_id);
+  const result   = verify_record(event_id);
   const verified = result === "verified";
+
+  // HTMX: return inline chip; the "Check" button target swaps its innerHTML
+  if (c.req.header("HX-Request")) {
+    const cls   = verified ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700";
+    const label = verified ? "✓ verified" : "✗ tampered";
+    return c.html(
+      `<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${cls}">${label}</span>`,
+    );
+  }
+
   return c.json({ event_id, result, verified });
 });
 
