@@ -1,14 +1,17 @@
 import type { FC } from "hono/jsx";
+import type { Actor } from "../domain/actor.ts";
 
 type LayoutProps = {
   title?: string;
-  currentActor?: { actor_ref: string; display_name: string } | null;
+  currentActor?: Actor | null;
+  actors?: Actor[];
   children?: unknown;
 };
 
 export const Layout: FC<LayoutProps> = ({
   title = "Grace Commons Demo",
   currentActor,
+  actors = [],
   children,
 }) => {
   return (
@@ -27,27 +30,45 @@ export const Layout: FC<LayoutProps> = ({
             <a href="/" class="font-semibold text-gray-800 hover:text-gray-600">
               Grace Commons
             </a>
-            <a href="/" class="text-sm text-gray-600 hover:text-gray-800">
+            <a href="/" class="text-sm text-gray-600 hover:text-gray-900">
               Chains
             </a>
-            <a href="/me/in-tray" class="text-sm text-gray-600 hover:text-gray-800">
+            <a href="/me/in-tray" class="text-sm text-gray-600 hover:text-gray-900">
               In-tray
             </a>
-            <a href="/audit-ui" class="text-sm text-gray-600 hover:text-gray-800">
+            <a href="/audit-ui" class="text-sm text-gray-600 hover:text-gray-900">
               Audit log
             </a>
           </nav>
-          <div class="flex items-center gap-3 text-sm">
-            {currentActor ? (
-              <form method="post" action="/act-as" class="flex items-center gap-2">
-                <span class="text-gray-500">Acting as:</span>
-                <span class="font-medium">{currentActor.display_name}</span>
-                {/* Actor switcher will be wired in Step 3 */}
-              </form>
-            ) : (
-              <span class="text-gray-400 italic">No actor selected</span>
-            )}
-          </div>
+
+          {/* Actor switcher */}
+          {actors.length > 0 && (
+            <form method="post" action="/act-as" class="flex items-center gap-2 text-sm">
+              <span class="text-gray-500">Acting as:</span>
+              <select
+                name="actor_ref"
+                onchange="this.form.submit()"
+                class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-gray-400"
+              >
+                {actors
+                  .filter((a) => a.kind === "human")
+                  .map((a) => (
+                    <option
+                      value={a.actor_ref}
+                      selected={currentActor?.actor_ref === a.actor_ref}
+                    >
+                      {a.display_name}
+                    </option>
+                  ))}
+              </select>
+            </form>
+          )}
+
+          {actors.length === 0 && (
+            <span class="text-sm text-gray-400 italic">
+              {currentActor ? currentActor.display_name : "No actor selected"}
+            </span>
+          )}
         </header>
 
         {/* Page content */}
