@@ -40,7 +40,7 @@ export const ChainListPage: FC<ChainListPageProps> = ({
         </select>
         <button type="submit"
           class="px-3 py-1.5 text-sm bg-ink-gray-100 text-ink-gray-700 rounded hover:bg-ink-gray-200">
-          Filter
+          Apply filter
         </button>
         {stateFilter && (
           <a href="/" class="text-sm text-ink-gray-400 hover:text-ink-gray-600">Clear</a>

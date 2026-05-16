@@ -47,7 +47,7 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
           class="border rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ink-gray-400 w-80" />
         <button type="submit"
           class="px-3 py-1.5 text-sm bg-ink-gray-100 text-ink-gray-700 rounded hover:bg-ink-gray-200">
-          Filter
+          Apply filter
         </button>
         {chainFilter && (
           <a href="/audit-ui" class="text-sm text-ink-gray-400 hover:text-ink-gray-600">Clear</a>

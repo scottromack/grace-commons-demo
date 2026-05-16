@@ -110,7 +110,7 @@ const actors = [
   {
     actor_ref: "pi_chen",
     kind: "human",
-    display_name: "Chen (PI)",
+    display_name: "Wei (PI)",
     credential_public: "pub_pi_chen",
     credential_secret: "sec_pi_chen_hmac_key_32bytes!!!",
   },
