@@ -7,7 +7,7 @@ await ensureDir("public");
 await ensureDir("data");
 
 // Vendor HTMX
-const htmxUrl = "https://unpkg.com/htmx.org@1.9.12/dist/htmx.min.js";
+const htmxUrl = "https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js";
 const htmxDest = "public/htmx.min.js";
 
 try {

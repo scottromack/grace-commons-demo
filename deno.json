@@ -1,4 +1,5 @@
 {
+  "nodeModulesDir": "auto",
   "tasks": {
     "setup": "deno run --allow-net --allow-write scripts/setup.ts",
     "dev": "deno task build:css --watch & deno run -A --watch src/main.ts",
@@ -8,6 +9,7 @@
     "test": "deno test --allow-read --allow-write --allow-net tests/"
   },
   "imports": {
+    "tailwindcss": "npm:tailwindcss@^4",
     "hono": "jsr:@hono/hono",
     "hono/jsx": "jsr:@hono/hono/jsx",
     "hono/jsx/jsx-runtime": "jsr:@hono/hono/jsx/jsx-runtime",

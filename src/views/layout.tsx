@@ -21,7 +21,8 @@ export const Layout: FC<LayoutProps> = ({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title}</title>
         <link rel="stylesheet" href="/styles.css" />
-        <script src="/htmx.min.js" defer></script>
+        <script src="/htmx.min.js"></script>
+        <script>htmx.config.useTemplateFragments = true;</script>
       </head>
       <body class="bg-gray-50 text-gray-900 min-h-screen">
         {/* Top bar */}
