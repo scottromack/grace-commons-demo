@@ -9,3 +9,9 @@
 # https://docs.deno.com/runtime/reference/cli/coverage/
 coverage/
 *.lcov
+
+# Demo runtime data
+data/
+
+# Built assets
+public/styles.css
