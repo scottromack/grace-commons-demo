@@ -537,7 +537,7 @@ The demo uses Tailwind v4's CSS-first configuration. No `tailwind.config.js`, no
 @source "./src/routes/pages.ts";
 
 @theme {
-  /* optional: brand color tokens, type scale tweaks */
+  see src/inkset.css and ../VisualDesignSystem.md
 }
 ```
 

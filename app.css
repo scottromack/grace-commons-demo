@@ -1,4 +1,5 @@
 @import "tailwindcss";
 
 @source "./src/views/**/*.tsx";
-@source "./src/routes/pages.ts";
+@source "./src/routes/pages.tsx";
+@source "./src/routes/steps.tsx";
