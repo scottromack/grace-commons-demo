@@ -144,13 +144,14 @@ pages.get("/me/in-tray", (c) => {
 // GET /audit-ui — full audit log page
 // ---------------------------------------------------------------------------
 pages.get("/audit-ui", (c) => {
-  const actor  = c.get("actor");
-  const actors = listActors();
+  const actor      = c.get("actor");
+  const actors     = listActors();
   const chainFilter = c.req.query("chain_id") || undefined;
+  const devMode    = c.req.query("dev") === "1";
 
   if (!actor || permitted(actor.actor_ref, "chains:read") === "denied") {
     return c.html(
-      <AuditLogPage actor={actor} actors={actors} events={[]} chainFilter={chainFilter} />,
+      <AuditLogPage actor={actor} actors={actors} events={[]} chainFilter={chainFilter} devMode={devMode} />,
     );
   }
 
@@ -167,7 +168,7 @@ pages.get("/audit-ui", (c) => {
   `).all(...bindings) as AuditEventRow[];
 
   return c.html(
-    <AuditLogPage actor={actor} actors={actors} events={events} chainFilter={chainFilter} />,
+    <AuditLogPage actor={actor} actors={actors} events={events} chainFilter={chainFilter} devMode={devMode} />,
   );
 });
 

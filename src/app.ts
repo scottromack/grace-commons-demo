@@ -7,6 +7,7 @@ import { chains } from "./routes/chains.ts";
 import { steps } from "./routes/steps.tsx";
 import { audit } from "./routes/audit.ts";
 import { verify } from "./routes/verify.ts";
+import { admin } from "./routes/admin.ts";
 
 const app = new Hono<{ Variables: AppVariables }>();
 
@@ -29,5 +30,6 @@ app.route("/chains", chains);
 app.route("/chains", steps);   // step routes nest under /chains/:id/steps/:id
 app.route("/audit", audit);
 app.route("/verify", verify);
+app.route("/admin", admin);    // dev-only tamper helper; gated behind ?dev=1 in the handler
 
 export { app };

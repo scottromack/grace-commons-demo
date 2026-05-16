@@ -25,6 +25,8 @@ type AuditLogPageProps = {
   actors: Actor[];
   events: AuditEventRow[];
   chainFilter?: string;
+  /** When true, show the dev-tamper panel per row (?dev=1 in URL) */
+  devMode?: boolean;
 };
 
 export const AuditLogPage: FC<AuditLogPageProps> = ({
@@ -32,9 +34,23 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
   actors,
   events,
   chainFilter,
+  devMode,
 }) => {
   return (
     <Layout title="Audit log — Grace Commons" currentActor={actor} actors={actors}>
+      {devMode && (
+        <div class="mb-4 px-4 py-3 rounded-lg border border-red-300 bg-red-50 text-red-800 text-xs flex items-start gap-2">
+          <span class="text-base leading-none mt-0.5">⚠️</span>
+          <span>
+            <strong>Dev mode active.</strong> Each row now shows a{" "}
+            <strong>Tamper</strong> button that mutates <code>data_json</code>{" "}
+            in the database, bypassing the append-only triggers.
+            Click <strong>Check</strong> on the same row afterward to see the
+            hash-chain forgery defense fire.
+          </span>
+        </div>
+      )}
+
       <div class="flex items-center justify-between mb-5">
         <h1 class="text-xl font-semibold text-ink-gray-800">Audit log</h1>
         <span class="text-xs text-ink-gray-400">{events.length} event{events.length !== 1 ? "s" : ""}</span>
@@ -42,6 +58,7 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
 
       {/* Filter */}
       <form method="get" action="/audit-ui" class="mb-5 flex items-center gap-3">
+        {devMode && <input type="hidden" name="dev" value="1" />}
         <input type="text" name="chain_id" value={chainFilter ?? ""}
           placeholder="Filter by chain ID"
           class="border rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ink-gray-400 w-80" />
@@ -50,7 +67,8 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
           Apply filter
         </button>
         {chainFilter && (
-          <a href="/audit-ui" class="text-sm text-ink-gray-400 hover:text-ink-gray-600">Clear</a>
+          <a href={devMode ? "/audit-ui?dev=1" : "/audit-ui"}
+            class="text-sm text-ink-gray-400 hover:text-ink-gray-600">Clear</a>
         )}
       </form>
 
@@ -68,6 +86,7 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
                 <th class="py-3 px-4 font-medium">Time (UTC)</th>
                 <th class="py-3 px-4 font-medium">Retention</th>
                 <th class="py-3 px-4 font-medium">Integrity</th>
+                {devMode && <th class="py-3 px-4 font-medium text-red-600">Demo tamper</th>}
               </tr>
             </thead>
             <tbody>
@@ -105,6 +124,24 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
                       </button>
                     </span>
                   </td>
+                  {devMode && (
+                    <td class="py-2 px-4">
+                      <span id={`tamper-btn-${ev.event_id}`}>
+                        {/* deno-lint-ignore no-explicit-any */}
+                        <button
+                          {...{
+                            "hx-post": `/admin/tamper?dev=1`,
+                            "hx-vals": JSON.stringify({ event_id: ev.event_id }),
+                            "hx-target": `#tamper-btn-${ev.event_id}`,
+                            "hx-swap": "innerHTML",
+                            "hx-confirm": `Mutate data_json for event #${ev.event_id}? This will break the hash chain at this row.`,
+                          } as any}
+                          class="px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded hover:bg-red-100 cursor-pointer text-xs">
+                          Tamper
+                        </button>
+                      </span>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

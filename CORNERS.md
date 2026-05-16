@@ -68,6 +68,14 @@ These are *not* corners the demo cut — they are items the spec explicitly name
 - **Cut made:** `initiate_chain` accepts `retention_policy` and uses it for the `chain_initiated` audit event, but does not store it on the `chain` row. Step-level audit events (`step_approved`, `step_rejected`, `step_withdrawn`, `chain_resolved`) always use `AUDIT_TRAIL_RETENTION_POLICY` (default `sox_7_year`), regardless of the chain's declared policy. Result: a chain initiated with `ich_e6_tmf` will have its step events recorded under `sox_7_year`.
 - **Relaxation cost:** Add `retention_policy TEXT NOT NULL` column to `chain` table; read it in `stepDecision` and `handleTerminalTransition`. ~30 min including migration.
 
+### Audit trail records `actor_ref`, not `display_name`
+
+- **Spec section:** *Composes — Audit Trail; Actor Identity*.
+- **Design note (not a cut):** `audit_event.actor_ref` stores the stable, immutable identity token — not the display name. If an actor's `display_name` changes after the fact (name change, title change, system update), every historical event still accurately reflects who acted. Surfaces correctly in the audit log UI: `actor_ref` is the durable identity; `display_name` is a mutable label. This is intentional and required for SOX §302 / FDA Part 11 / ICH E6 attribution integrity.
+- **Relaxation cost:** N/A — this is correct behaviour, not a deviation.
+
+---
+
 ### `actor_ref` for pi_müller normalised to ASCII
 
 - **Spec section:** BUILD_PLAN.md §11 (seed actors).

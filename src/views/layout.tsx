@@ -24,9 +24,9 @@ export const Layout: FC<LayoutProps> = ({
         <script src="/htmx.min.js"></script>
         <script>htmx.config.useTemplateFragments = true;</script>
       </head>
-      <body class="bg-ink-gray-50 text-ink-gray-900 min-h-screen">
+      <body class="inks-gray-0 min-h-screen">
         {/* Top bar */}
-        <header class="bg-ink-gray-0 border-b px-6 py-3 flex items-center justify-between">
+        <header class="raised sticky top-0 z-10 px-10 py-5 flex items-center justify-between">
           <nav class="flex items-center gap-6">
             <a href="/" class="font-semibold text-ink-gray-800 hover:text-ink-gray-600">
               Grace Commons
