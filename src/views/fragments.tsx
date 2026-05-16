@@ -16,12 +16,12 @@ import type { Actor } from "../domain/actor.ts";
 
 export function StatePill({ state }: { state: string }) {
   const map: Record<string, string> = {
-    Pending:   "bg-gray-100 text-gray-600",
+    Pending:   "bg-ink-gray-100 text-ink-gray-600",
     Approved:  "bg-green-100 text-green-700",
     Rejected:  "bg-red-100 text-red-700",
     Withdrawn: "bg-amber-100 text-amber-700",
   };
-  const cls = map[state] ?? "bg-gray-100 text-gray-500";
+  const cls = map[state] ?? "bg-ink-gray-100 text-ink-gray-500";
   return (
     <span class={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${cls}`}>
       {state}
@@ -47,21 +47,21 @@ export const StepRow: FC<StepRowProps> = ({ step, actor }) => {
   const hxTarget    = `#step-${step.step_id}`;
 
   return (
-    <tr id={`step-${step.step_id}`} class="border-b border-gray-100 last:border-0">
+    <tr id={`step-${step.step_id}`} class="border-b last:border-0">
       {/* # */}
-      <td class="py-3 px-4 text-sm text-gray-400 w-8 shrink-0">{step.position + 1}</td>
+      <td class="py-3 px-4 text-sm text-ink-gray-400 w-8 shrink-0">{step.position + 1}</td>
 
       {/* Approver */}
-      <td class="py-3 px-4 text-sm font-medium text-gray-800">{step.approver_display_name}</td>
+      <td class="py-3 px-4 text-sm font-medium text-ink-gray-800">{step.approver_display_name}</td>
 
       {/* Submitted */}
-      <td class="py-3 px-4 text-sm text-gray-400">{step.submitted_at.slice(0, 10)}</td>
+      <td class="py-3 px-4 text-sm text-ink-gray-400">{step.submitted_at.slice(0, 10)}</td>
 
       {/* State */}
       <td class="py-3 px-4">
         <StatePill state={step.state} />
         {step.decision_reason && (
-          <p class="mt-1 text-xs text-gray-400 italic max-w-xs truncate"
+          <p class="mt-1 text-xs text-ink-gray-400 italic max-w-xs truncate"
             title={step.decision_reason}>
             {step.decision_reason}
           </p>
@@ -71,7 +71,7 @@ export const StepRow: FC<StepRowProps> = ({ step, actor }) => {
       {/* Actions / decided-by */}
       <td class="py-3 px-4">
         {step.state !== "Pending" ? (
-          <span class="text-xs text-gray-400">
+          <span class="text-xs text-ink-gray-400">
             {step.decided_by}{step.decided_at ? ` · ${step.decided_at.slice(0, 10)}` : ""}
           </span>
         ) : (
@@ -94,11 +94,11 @@ export const StepRow: FC<StepRowProps> = ({ step, actor }) => {
                 <summary class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded cursor-pointer hover:bg-red-200 list-none">
                   Reject
                 </summary>
-                <div class="absolute left-0 top-full z-10 mt-1 bg-white border border-gray-200 rounded shadow-lg p-3 w-56">
+                <div class="absolute left-0 top-full z-10 mt-1 bg-ink-gray-0 border rounded shadow-lg p-3 w-56">
                   {/* deno-lint-ignore no-explicit-any */}
                   <form {...{"hx-post": rejectUrl, "hx-target": hxTarget, "hx-swap": "outerHTML"} as any}>
                     <input type="text" name="reason" required placeholder="Reason (required)"
-                      class="w-full border border-gray-300 rounded px-2 py-1 text-xs mb-2 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+                      class="w-full border rounded px-2 py-1 text-xs mb-2 focus:outline-none focus:ring-1 focus:ring-ink-gray-300" />
                     <button type="submit"
                       class="w-full px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer">
                       Confirm reject
@@ -114,11 +114,11 @@ export const StepRow: FC<StepRowProps> = ({ step, actor }) => {
                 <summary class="px-2 py-1 text-xs bg-amber-100 text-amber-700 rounded cursor-pointer hover:bg-amber-200 list-none">
                   Withdraw
                 </summary>
-                <div class="absolute left-0 top-full z-10 mt-1 bg-white border border-gray-200 rounded shadow-lg p-3 w-56">
+                <div class="absolute left-0 top-full z-10 mt-1 bg-ink-gray-0 border rounded shadow-lg p-3 w-56">
                   {/* deno-lint-ignore no-explicit-any */}
                   <form {...{"hx-post": withdrawUrl, "hx-target": hxTarget, "hx-swap": "outerHTML"} as any}>
                     <input type="text" name="reason" required placeholder="Reason (required)"
-                      class="w-full border border-gray-300 rounded px-2 py-1 text-xs mb-2 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+                      class="w-full border rounded px-2 py-1 text-xs mb-2 focus:outline-none focus:ring-1 focus:ring-ink-gray-300" />
                     <button type="submit"
                       class="w-full px-3 py-1 text-xs bg-amber-600 text-white rounded hover:bg-amber-700 cursor-pointer">
                       Confirm withdraw
@@ -154,25 +154,25 @@ export const ChainBanner: FC<ChainBannerProps> = ({ chain, actor, oob }) => {
 
   return (
     <div id={`chain-banner-${chain.chain_id}`} {...oobProp}
-      class="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+      class="bg-ink-gray-0 border rounded-lg p-4 mb-6">
       <div class="flex items-start justify-between gap-4">
         <div class="min-w-0">
           <div class="flex items-center gap-3 mb-1 flex-wrap">
-            <h2 class="text-lg font-semibold text-gray-800">{chain.subject_ref}</h2>
+            <h2 class="text-lg font-semibold text-ink-gray-800">{chain.subject_ref}</h2>
             <StatePill state={chain.state} />
           </div>
-          <p class="text-sm text-gray-500">
+          <p class="text-sm text-ink-gray-500">
             <span class="font-medium">Scope:</span> {chain.scope}
             {" · "}
             <span class="font-medium">Quorum:</span> {quorumLabel}
             {" · "}
             <span class="font-medium">By:</span> {chain.initiator_display_name}
             {chain.initiated_at && (
-              <> · <span class="text-gray-400">{chain.initiated_at.slice(0, 10)}</span></>
+              <> · <span class="text-ink-gray-400">{chain.initiated_at.slice(0, 10)}</span></>
             )}
           </p>
           {chain.terminal_reason && (
-            <p class="mt-1 text-xs text-gray-400 italic">{chain.terminal_reason}</p>
+            <p class="mt-1 text-xs text-ink-gray-400 italic">{chain.terminal_reason}</p>
           )}
         </div>
 
@@ -186,13 +186,13 @@ export const ChainBanner: FC<ChainBannerProps> = ({ chain, actor, oob }) => {
               <summary class="px-3 py-1 text-xs bg-amber-100 text-amber-700 rounded cursor-pointer hover:bg-amber-200 list-none">
                 Withdraw chain
               </summary>
-              <div class="absolute right-0 top-full z-10 mt-1 bg-white border border-gray-200 rounded shadow-lg p-3 w-64">
-                <p class="text-xs text-gray-500 mb-2">
+              <div class="absolute right-0 top-full z-10 mt-1 bg-ink-gray-0 border rounded shadow-lg p-3 w-64">
+                <p class="text-xs text-ink-gray-500 mb-2">
                   Withdraws the chain and cascades to all pending steps.
                 </p>
                 <form method="post" action={`/chains/${chain.chain_id}/withdraw`}>
                   <input type="text" name="reason" required placeholder="Reason (required)"
-                    class="w-full border border-gray-300 rounded px-2 py-1 text-xs mb-2 focus:outline-none" />
+                    class="w-full border rounded px-2 py-1 text-xs mb-2 focus:outline-none" />
                   <button type="submit"
                     class="w-full px-3 py-1 text-xs bg-amber-600 text-white rounded hover:bg-amber-700 cursor-pointer">
                     Confirm withdrawal

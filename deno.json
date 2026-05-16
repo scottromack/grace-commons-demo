@@ -10,6 +10,7 @@
   },
   "imports": {
     "tailwindcss": "npm:tailwindcss@^4",
+    "@tailwindcss/typography": "npm:@tailwindcss/typography",
     "hono": "jsr:@hono/hono",
     "hono/jsx": "jsr:@hono/hono/jsx",
     "hono/jsx/jsx-runtime": "jsr:@hono/hono/jsx/jsx-runtime",

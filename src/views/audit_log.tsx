@@ -36,31 +36,31 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
   return (
     <Layout title="Audit log — Grace Commons" currentActor={actor} actors={actors}>
       <div class="flex items-center justify-between mb-5">
-        <h1 class="text-xl font-semibold text-gray-800">Audit log</h1>
-        <span class="text-xs text-gray-400">{events.length} event{events.length !== 1 ? "s" : ""}</span>
+        <h1 class="text-xl font-semibold text-ink-gray-800">Audit log</h1>
+        <span class="text-xs text-ink-gray-400">{events.length} event{events.length !== 1 ? "s" : ""}</span>
       </div>
 
       {/* Filter */}
       <form method="get" action="/audit-ui" class="mb-5 flex items-center gap-3">
         <input type="text" name="chain_id" value={chainFilter ?? ""}
           placeholder="Filter by chain ID"
-          class="border border-gray-300 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-80" />
+          class="border rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-ink-gray-400 w-80" />
         <button type="submit"
-          class="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+          class="px-3 py-1.5 text-sm bg-ink-gray-100 text-ink-gray-700 rounded hover:bg-ink-gray-200">
           Filter
         </button>
         {chainFilter && (
-          <a href="/audit-ui" class="text-sm text-gray-400 hover:text-gray-600">Clear</a>
+          <a href="/audit-ui" class="text-sm text-ink-gray-400 hover:text-ink-gray-600">Clear</a>
         )}
       </form>
 
-      <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-ink-gray-0 border rounded-lg overflow-hidden">
         {events.length === 0 ? (
-          <div class="text-center py-12 text-gray-400 text-sm">No events.</div>
+          <div class="text-center py-12 text-ink-gray-400 text-sm">No events.</div>
         ) : (
           <table class="w-full">
-            <thead class="bg-gray-50 border-b border-gray-200 text-left">
-              <tr class="text-xs text-gray-600">
+            <thead class="bg-ink-gray-50 border-b text-left">
+              <tr class="text-xs text-ink-gray-600">
                 <th class="py-3 px-4 font-medium w-12">Seq</th>
                 <th class="py-3 px-4 font-medium">Action</th>
                 <th class="py-3 px-4 font-medium">Actor</th>
@@ -72,11 +72,11 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
             </thead>
             <tbody>
               {events.map((ev) => (
-                <tr class="border-b border-gray-100 last:border-0 hover:bg-gray-50 text-xs">
-                  <td class="py-2 px-4 text-gray-400 font-mono">{ev.seq}</td>
-                  <td class="py-2 px-4 font-mono text-gray-700">{ev.action_ref}</td>
-                  <td class="py-2 px-4 text-gray-600">{ev.actor_ref}</td>
-                  <td class="py-2 px-4 text-gray-400">
+                <tr class="border-b last:border-0 hover:bg-ink-gray-50 text-xs">
+                  <td class="py-2 px-4 text-ink-gray-400 font-mono">{ev.seq}</td>
+                  <td class="py-2 px-4 font-mono text-ink-gray-700">{ev.action_ref}</td>
+                  <td class="py-2 px-4 text-ink-gray-600">{ev.actor_ref}</td>
+                  <td class="py-2 px-4 text-ink-gray-400">
                     {ev.chain_id ? (
                       <a href={`/chains/${ev.chain_id}`}
                         class="text-blue-500 hover:underline font-mono">
@@ -84,13 +84,13 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
                       </a>
                     ) : "—"}
                     {ev.step_id && (
-                      <span class="ml-1 text-gray-300 font-mono">/{ev.step_id.slice(-6)}</span>
+                      <span class="ml-1 text-ink-gray-300 font-mono">/{ev.step_id.slice(-6)}</span>
                     )}
                   </td>
-                  <td class="py-2 px-4 text-gray-400">
+                  <td class="py-2 px-4 text-ink-gray-400">
                     {ev.recorded_at.slice(0, 19).replace("T", " ")}
                   </td>
-                  <td class="py-2 px-4 text-gray-400">{ev.retention_policy}</td>
+                  <td class="py-2 px-4 text-ink-gray-400">{ev.retention_policy}</td>
                   <td class="py-2 px-4">
                     <span id={`verify-chip-${ev.event_id}`}>
                       {/* deno-lint-ignore no-explicit-any */}
@@ -100,7 +100,7 @@ export const AuditLogPage: FC<AuditLogPageProps> = ({
                           "hx-target": `#verify-chip-${ev.event_id}`,
                           "hx-swap": "innerHTML",
                         } as any}
-                        class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200 cursor-pointer">
+                        class="px-2 py-0.5 bg-ink-gray-100 text-ink-gray-500 rounded hover:bg-ink-gray-200 cursor-pointer">
                         Check
                       </button>
                     </span>

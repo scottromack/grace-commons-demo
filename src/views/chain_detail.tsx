@@ -39,7 +39,7 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
       actors={actors}
     >
       <div class="mb-4">
-        <a href="/" class="text-sm text-gray-400 hover:text-gray-600">← All chains</a>
+        <a href="/" class="text-sm text-ink-gray-400 hover:text-ink-gray-600">← All chains</a>
       </div>
 
       <ChainBanner chain={chain} actor={actor} />
@@ -48,16 +48,16 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
       <div id="error-flash"></div>
 
       {/* Steps */}
-      <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
-        <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">
-          <h3 class="text-sm font-semibold text-gray-700">Approval steps</h3>
+      <div class="bg-ink-gray-0 border rounded-lg overflow-hidden mb-6">
+        <div class="px-4 py-3 border-b bg-ink-gray-50">
+          <h3 class="text-sm font-semibold text-ink-gray-700">Approval steps</h3>
         </div>
         {chain.steps.length === 0 ? (
-          <p class="px-4 py-6 text-sm text-gray-400">No steps.</p>
+          <p class="px-4 py-6 text-sm text-ink-gray-400">No steps.</p>
         ) : (
           <table class="w-full text-sm">
-            <thead class="border-b border-gray-100 text-left">
-              <tr class="text-xs text-gray-500">
+            <thead class="border-b text-left">
+              <tr class="text-xs text-ink-gray-500">
                 <th class="py-2 px-4 font-medium w-8">#</th>
                 <th class="py-2 px-4 font-medium">Approver</th>
                 <th class="py-2 px-4 font-medium">Submitted</th>
@@ -76,17 +76,17 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
 
       {/* Mini audit trail */}
       {events.length > 0 && (
-        <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-          <div class="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <h3 class="text-sm font-semibold text-gray-700">Audit trail</h3>
+        <div class="bg-ink-gray-0 border rounded-lg overflow-hidden">
+          <div class="px-4 py-3 border-b bg-ink-gray-50 flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-ink-gray-700">Audit trail</h3>
             <a href={`/audit-ui?chain_id=${chain.chain_id}`}
               class="text-xs text-blue-500 hover:underline">
               Full log →
             </a>
           </div>
           <table class="w-full">
-            <thead class="border-b border-gray-100 text-left">
-              <tr class="text-xs text-gray-500">
+            <thead class="border-b text-left">
+              <tr class="text-xs text-ink-gray-500">
                 <th class="py-2 px-4 font-medium w-12">Seq</th>
                 <th class="py-2 px-4 font-medium">Action</th>
                 <th class="py-2 px-4 font-medium">Actor</th>
@@ -96,11 +96,11 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
             </thead>
             <tbody>
               {events.map((ev) => (
-                <tr class="border-b border-gray-50 last:border-0 text-xs">
-                  <td class="py-2 px-4 text-gray-400 font-mono">{ev.seq}</td>
-                  <td class="py-2 px-4 font-mono text-gray-700">{ev.action_ref}</td>
-                  <td class="py-2 px-4 text-gray-500">{ev.actor_ref}</td>
-                  <td class="py-2 px-4 text-gray-400">
+                <tr class="border-b last:border-0 text-xs">
+                  <td class="py-2 px-4 text-ink-gray-400 font-mono">{ev.seq}</td>
+                  <td class="py-2 px-4 font-mono text-ink-gray-700">{ev.action_ref}</td>
+                  <td class="py-2 px-4 text-ink-gray-500">{ev.actor_ref}</td>
+                  <td class="py-2 px-4 text-ink-gray-400">
                     {ev.recorded_at.slice(0, 19).replace("T", " ")}
                   </td>
                   <td class="py-2 px-4">
@@ -112,7 +112,7 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
                           "hx-target": `#verify-chip-${ev.event_id}`,
                           "hx-swap": "innerHTML",
                         } as any}
-                        class="px-2 py-0.5 bg-gray-100 text-gray-500 rounded hover:bg-gray-200 cursor-pointer">
+                        class="px-2 py-0.5 bg-ink-gray-100 text-ink-gray-500 rounded hover:bg-ink-gray-200 cursor-pointer">
                         Check
                       </button>
                     </span>
