@@ -44,6 +44,9 @@ export const ChainDetailPage: FC<ChainDetailPageProps> = ({
 
       <ChainBanner chain={chain} actor={actor} />
 
+      {/* Error flash — populated by HTMX OOB swap on step action failure */}
+      <div id="error-flash"></div>
+
       {/* Steps */}
       <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
         <div class="px-4 py-3 border-b border-gray-100 bg-gray-50">

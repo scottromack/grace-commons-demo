@@ -34,7 +34,33 @@ async function parseBody(c: HonoCtx): Promise<Record<string, unknown>> {
 }
 
 // ---------------------------------------------------------------------------
-// HTMX fragment response — updated StepRow + OOB ChainBanner
+// HTMX error flash OOB element
+// ---------------------------------------------------------------------------
+
+function ErrorFlash({ message }: { message: string }) {
+  // deno-lint-ignore no-explicit-any
+  const oob = { "hx-swap-oob": "innerHTML" } as any;
+  return (
+    <div id="error-flash" {...oob}
+      class="mb-4 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-center justify-between">
+      <span>⚠ {message}</span>
+      <button
+        onclick="this.closest('#error-flash').innerHTML=''"
+        class="ml-4 text-red-400 hover:text-red-600 cursor-pointer font-bold leading-none">
+        ✕
+      </button>
+    </div>
+  );
+}
+
+function ClearFlash() {
+  // deno-lint-ignore no-explicit-any
+  const oob = { "hx-swap-oob": "innerHTML" } as any;
+  return <div id="error-flash" {...oob}></div>;
+}
+
+// ---------------------------------------------------------------------------
+// HTMX fragment response — updated StepRow + OOB ChainBanner + cleared flash
 // ---------------------------------------------------------------------------
 
 function htmxFragment(
@@ -54,6 +80,36 @@ function htmxFragment(
     <>
       <StepRow step={step} actor={actor} />
       <ChainBanner chain={chain} actor={actor} oob />
+      <ClearFlash />
+    </>,
+  );
+}
+
+// ---------------------------------------------------------------------------
+// HTMX error response — unchanged StepRow + OOB error flash
+// ---------------------------------------------------------------------------
+
+function htmxError(
+  c: HonoCtx,
+  chain_id: string,
+  step_id: string,
+  message: string,
+) {
+  const actor       = c.get("actor")!;
+  const chainResult = read_chain(actor.actor_ref, { chain_id });
+  const chain       = "err" in chainResult ? null : (chainResult.ok[0] ?? null);
+  const step        = chain?.steps.find((s) => s.step_id === step_id);
+
+  // If we can't even read the step, return just the flash
+  if (!step) {
+    return c.html(<ErrorFlash message={message} />);
+  }
+
+  // Return the unchanged row so it stays interactive, plus the flash
+  return c.html(
+    <>
+      <StepRow step={step} actor={actor} />
+      <ErrorFlash message={message} />
     </>,
   );
 }
@@ -63,7 +119,10 @@ function htmxFragment(
 // ---------------------------------------------------------------------------
 steps.post("/:chain_id/steps/:step_id/approve", async (c) => {
   const actor = c.get("actor");
-  if (!actor) return c.json({ error: "no actor selected" }, 401);
+  if (!actor) {
+    if (c.req.header("HX-Request")) return c.html(<ErrorFlash message="no actor selected" />);
+    return c.json({ error: "no actor selected" }, 401);
+  }
 
   const body   = await parseBody(c);
   const reason = body.reason != null ? String(body.reason) : null;
@@ -72,7 +131,10 @@ steps.post("/:chain_id/steps/:step_id/approve", async (c) => {
   const step_id  = c.req.param("step_id");
 
   const result = approve_step(actor.actor_ref, chain_id, step_id, reason);
-  if ("err" in result) return c.json({ error: result.err }, tokenToStatus(result.err));
+  if ("err" in result) {
+    if (c.req.header("HX-Request")) return htmxError(c, chain_id, step_id, result.err);
+    return c.json({ error: result.err }, tokenToStatus(result.err));
+  }
 
   if (c.req.header("HX-Request")) return htmxFragment(c, chain_id, step_id);
   return c.json(result.ok);
@@ -83,7 +145,10 @@ steps.post("/:chain_id/steps/:step_id/approve", async (c) => {
 // ---------------------------------------------------------------------------
 steps.post("/:chain_id/steps/:step_id/reject", async (c) => {
   const actor = c.get("actor");
-  if (!actor) return c.json({ error: "no actor selected" }, 401);
+  if (!actor) {
+    if (c.req.header("HX-Request")) return c.html(<ErrorFlash message="no actor selected" />);
+    return c.json({ error: "no actor selected" }, 401);
+  }
 
   const body   = await parseBody(c);
   const reason = String(body.reason ?? "");
@@ -92,7 +157,10 @@ steps.post("/:chain_id/steps/:step_id/reject", async (c) => {
   const step_id  = c.req.param("step_id");
 
   const result = reject_step(actor.actor_ref, chain_id, step_id, reason);
-  if ("err" in result) return c.json({ error: result.err }, tokenToStatus(result.err));
+  if ("err" in result) {
+    if (c.req.header("HX-Request")) return htmxError(c, chain_id, step_id, result.err);
+    return c.json({ error: result.err }, tokenToStatus(result.err));
+  }
 
   if (c.req.header("HX-Request")) return htmxFragment(c, chain_id, step_id);
   return c.json(result.ok);
@@ -103,7 +171,10 @@ steps.post("/:chain_id/steps/:step_id/reject", async (c) => {
 // ---------------------------------------------------------------------------
 steps.post("/:chain_id/steps/:step_id/withdraw", async (c) => {
   const actor = c.get("actor");
-  if (!actor) return c.json({ error: "no actor selected" }, 401);
+  if (!actor) {
+    if (c.req.header("HX-Request")) return c.html(<ErrorFlash message="no actor selected" />);
+    return c.json({ error: "no actor selected" }, 401);
+  }
 
   const body   = await parseBody(c);
   const reason = String(body.reason ?? "");
@@ -112,7 +183,10 @@ steps.post("/:chain_id/steps/:step_id/withdraw", async (c) => {
   const step_id  = c.req.param("step_id");
 
   const result = withdraw_step(actor.actor_ref, chain_id, step_id, reason);
-  if ("err" in result) return c.json({ error: result.err }, tokenToStatus(result.err));
+  if ("err" in result) {
+    if (c.req.header("HX-Request")) return htmxError(c, chain_id, step_id, result.err);
+    return c.json({ error: result.err }, tokenToStatus(result.err));
+  }
 
   if (c.req.header("HX-Request")) return htmxFragment(c, chain_id, step_id);
   return c.json(result.ok);
