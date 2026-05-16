@@ -62,4 +62,8 @@ These are *not* corners the demo cut — they are items the spec explicitly name
 
 ## Build-discovered entries
 
-*(Sonnet appends here as the build proceeds. One entry per choice that defers, collapses, or stubs something against the spec.)*
+### `actor_ref` for pi_müller normalised to ASCII
+
+- **Spec section:** BUILD_PLAN.md §11 (seed actors).
+- **Cut made:** Plan names the actor_ref as `pi_müller` (with ü). Seed uses `pi_mueller` because actor_refs appear in cookie values and URL path segments in later steps; non-ASCII refs create percent-encoding noise with no spec benefit. Display name remains `Müller (PI)`.
+- **Relaxation cost:** Trivial rename in seed.ts and any test fixtures that reference this ref, once the URL/cookie layer is confirmed safe with non-ASCII values. ~10 min.
