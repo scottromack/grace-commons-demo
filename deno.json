@@ -13,7 +13,8 @@
     "hono/jsx/jsx-runtime": "jsr:@hono/hono/jsx/jsx-runtime",
     "@db/sqlite": "jsr:@db/sqlite",
     "@std/ulid": "jsr:@std/ulid",
-    "@std/crypto": "jsr:@std/crypto"
+    "@std/crypto": "jsr:@std/crypto",
+    "@std/assert": "jsr:@std/assert"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
