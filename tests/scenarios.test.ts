@@ -28,10 +28,12 @@ import { dirname, fromFileUrl, join } from "jsr:@std/path";
 Deno.env.set("DB_PATH", ":memory:");
 
 // ── 1. Dynamic imports (executed after env is set) ─────────────────────────
-const { app } = await import("../src/app.ts");
+// Order matters: client.ts must be loaded and the schema applied BEFORE app.ts
+// is imported, because actor.ts (loaded transitively by app.ts) prepares
+// statements against the actor table at module load time.
 const { db }  = await import("../src/db/client.ts");
 
-// ── 2. Schema ─────────────────────────────────────────────────────────────
+// ── 2. Schema (applied before app.ts loads actor.ts) ──────────────────────
 const schemaPath = join(
   dirname(fromFileUrl(import.meta.url)),
   "..",
@@ -41,7 +43,10 @@ const schemaPath = join(
 );
 db.exec(await Deno.readTextFile(schemaPath));
 
-// ── 3. Actors + permission grants ─────────────────────────────────────────
+// ── 3. App — safe to load now that the schema exists ──────────────────────
+const { app } = await import("../src/app.ts");
+
+// ── 4. Actors + permission grants ─────────────────────────────────────────
 // One application actor (system@demo), one initiator (sc_init), three
 // approvers (sc_a1 – sc_a3).  Credential secrets must be ≥ 32 bytes.
 const NOW = new Date().toISOString();
@@ -111,7 +116,7 @@ const ACTORS: Array<{
   }
 }
 
-// ── 4. HTTP helpers ────────────────────────────────────────────────────────
+// ── 5. HTTP helpers ────────────────────────────────────────────────────────
 
 type ReqOpts = {
   /** actor_ref cookie value; defaults to "sc_init" */
@@ -149,7 +154,7 @@ async function httpPost<T>(path: string, opts: ReqOpts = {}): Promise<{ status: 
   return { status: res.status, body: (await res.json()) as T };
 }
 
-// ── 5. Shared response shapes ─────────────────────────────────────────────
+// ── 6. Shared response shapes ─────────────────────────────────────────────
 
 type Assignment = {
   assignment_id: number;
@@ -190,7 +195,7 @@ function stepOf(chain: ChainView, approver_ref: string): string {
   return step.step_id;
 }
 
-// ── 6. Tests ──────────────────────────────────────────────────────────────
+// ── 7. Tests ──────────────────────────────────────────────────────────────
 
 // ---------------------------------------------------------------------------
 // Scenario 1: all-of-N → Approved

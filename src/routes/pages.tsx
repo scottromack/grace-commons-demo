@@ -156,7 +156,7 @@ pages.get("/audit-ui", (c) => {
   }
 
   const conditions: string[] = [];
-  const bindings: unknown[]  = [];
+  const bindings: string[]  = [];
   if (chainFilter) { conditions.push("chain_id = ?"); bindings.push(chainFilter); }
   const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 

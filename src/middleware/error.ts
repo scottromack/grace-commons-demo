@@ -1,6 +1,6 @@
 // Maps chain/atom rejection tokens to HTTP status codes.
 
-export function tokenToStatus(token: string): number {
+export function tokenToStatus(token: string): 400 | 403 | 404 | 409 | 500 {
   switch (token) {
     case "permission-denied": return 403;
     case "not-known":         return 404;

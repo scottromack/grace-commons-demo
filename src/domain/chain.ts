@@ -565,7 +565,7 @@ export function read_chain(
 
   // Build dynamic WHERE clause
   const conditions: string[] = [];
-  const bindings: unknown[] = [];
+  const bindings: string[] = [];
 
   if (query.chain_id)      { conditions.push("c.chain_id = ?");      bindings.push(query.chain_id); }
   if (query.subject_ref)   { conditions.push("c.subject_ref = ?");   bindings.push(query.subject_ref); }

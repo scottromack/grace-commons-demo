@@ -9,6 +9,7 @@
 //   application/json                  → req.json()
 
 import { Hono } from "hono";
+import type { Context } from "hono";
 import type { AppVariables } from "../middleware/current_actor.ts";
 import { approve_step, reject_step, withdraw_step, read_chain } from "../domain/chain.ts";
 import { tokenToStatus } from "../middleware/error.ts";
@@ -20,7 +21,7 @@ const steps = new Hono<{ Variables: AppVariables }>();
 // Body parsing helper — handles form-encoded (HTMX) and JSON (API)
 // ---------------------------------------------------------------------------
 
-type HonoCtx = Parameters<Parameters<typeof steps.post>[1]>[0];
+type HonoCtx = Context<{ Variables: AppVariables }>;
 
 async function parseBody(c: HonoCtx): Promise<Record<string, unknown>> {
   const ct = c.req.header("content-type") ?? "";
@@ -70,11 +71,11 @@ function htmxFragment(
 ) {
   const actor       = c.get("actor")!;
   const chainResult = read_chain(actor.actor_ref, { chain_id });
-  if ("err" in chainResult || chainResult.ok.length === 0) return c.text("", 204);
+  if ("err" in chainResult || chainResult.ok.length === 0) return new Response(null, { status: 204 });
 
   const chain = chainResult.ok[0];
   const step  = chain.steps.find((s) => s.step_id === step_id);
-  if (!step) return c.text("", 204);
+  if (!step) return new Response(null, { status: 204 });
 
   return c.html(
     <>

@@ -19,7 +19,7 @@ audit.get("/", (c) => {
   const { chain_id, step_id, action_ref, from, to } = c.req.query();
 
   const conditions: string[] = [];
-  const bindings: unknown[] = [];
+  const bindings: string[] = [];
 
   if (chain_id)   { conditions.push("chain_id = ?");       bindings.push(chain_id); }
   if (step_id)    { conditions.push("step_id = ?");         bindings.push(step_id); }
